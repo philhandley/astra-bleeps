@@ -10,7 +10,7 @@ Read `PLAN.md` first for who the app is for (a 6-year-old Commander, a 3-year-ol
 | `js/app.js`, `css/app.css`, `index.html` | Opus (main) | shell, router, home, styles |
 | `js/toys/songmaker.js pads.js chords.js jukebox.js wake.js closeeyes.js bonk.js beatmaker.js echo.js` | Opus (main) | studio and mission toys |
 | `js/toys/moonrun.js` | Agent A | the game |
-| `js/toys/wavedraw.js pulse.js lab.js silly.js detective.js` | Agent B | sound shapes and sound design |
+| `js/toys/wavedraw.js pulse.js lab.js silly.js detective.js` | Agent B | sound shapes and sound design (`lab.js` also exports `LAB_PRESETS`, `soundArt`, `toRecipe`, used by `detective.js`) |
 | `js/toys/highlow.js ladder.js starmaker.js march.js beatpad.js moodmove.js` | Agent C | pitch, beat and movement |
 | `content/`, `research/` | Opus (main) | missions and facts |
 
@@ -60,7 +60,7 @@ Rules:
 - `shape(voice, { duty, table })`: one cycle of a voice's wave (array of -1..1) for drawing.
 - `setCrewWave(table)`, `crewWave()`: the crew's drawn wave used by voice `'crew'`.
 - `pulseTable(duty)`, `TRIANGLE_TABLE`, `SAW_TABLE`, `noiseTable()`.
-- `analyser()`: an AnalyserNode on the master output (for a live scope).
+- `analyser()`: an AnalyserNode on the master output (for a live scope). `context()`: the AudioContext (or null).
 - `stopAll()`: silence everything now. `borrow(bus, at, dur)`: duck one bus for a moment. `muteBus(bus, bool)`.
 - `mtof(midi)`, `noteName(midi)` ('C', 'D'...), `noteLabel(midi)` ('C4').
 

@@ -33,7 +33,8 @@ Astra Finn (`C:\1 Astra Nova - Finn`, the space app and the GitHub Pages repo) a
 - `dev/smoke.html` walks every mission step and every studio screen and reports errors (run it headless: see `tools/smoke.sh`).
 - `dev/harness.html?toy=<name>&props=<json>` mounts one toy. `dev/audio-test.html` plays every voice, drum, effect and demo song.
 - `bash tools/shot.sh <name> "<path>" 1280,800 4000` takes a headless Chrome screenshot (port 8200). Add `?devcrew` to skip crew setup.
-- Run `python tools/build_sw.py` after any change, before publishing. Test offline caching with headless Edge and `dev/test-sw.html`.
+- Run `python tools/build_sw.py` after any change, before publishing. Offline test: start `python tools/slowserve.py 8201`, then `bash tools/swtest.sh` (headless Edge, real time). The browser pane cannot register service workers, and headless virtual time stops before caching finishes.
+- Headless Chrome freezes the Web Audio clock, so check playback in the browser pane; python's server lets the browser cache ES modules, so force-reload changed modules there.
 
 ## Done means
 Installed from the public link on the tablet, Mission 1 and the Song Maker work end to end with sound and no console errors, Moon Run plays the crew's sounds, and the app opens with Wi-Fi off after one online visit.

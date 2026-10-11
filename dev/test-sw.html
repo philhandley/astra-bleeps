@@ -1,6 +1,7 @@
 <!doctype html><meta charset="utf-8"><title>sw test</title>
+<script>if (/[?&]hold=/.test(location.search)) document.write('<iframe src="/__hold?s=' + location.search.match(/hold=(\d+)/)[1] + '" style="display:none"></iframe>');</script>
 <script type="module">
-const log = (...a) => console.log('SWTEST', ...a);
+const log = (...a) => { console.log('SWTEST', ...a); const p = document.createElement('pre'); p.textContent = 'SWTEST ' + a.join(' '); document.body.appendChild(p); };
 try {
   const reg = await navigator.serviceWorker.register('../sw.js', { scope: '../' });
   log('registered', reg.scope);
