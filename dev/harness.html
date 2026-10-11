@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toy harness</title>
+<link rel="stylesheet" href="../css/app.css">
+<style>
+  #bar { height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-bottom: 3px solid #1b1b24; font-size: 18px; }
+  #bar code { background: #fff; padding: 4px 8px; border-radius: 6px; }
+  #host { position: fixed; top: 64px; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+  #log { position: fixed; right: 8px; bottom: 8px; max-width: 420px; max-height: 200px; overflow: auto; background: rgba(27,27,36,.85); color: #fff; font: 13px/1.3 monospace; padding: 8px; border-radius: 8px; z-index: 999; }
+</style>
+</head>
+<body>
+<div id="bar"><b>Harness</b> <code id="name"></code> <span id="state"></span></div>
+<div id="host"><div class="toybody" style="flex:1;min-height:0;display:flex;flex-direction:column;position:relative"></div></div>
+<div id="log"></div>
+<script type="module">
+// Usage: dev/harness.html?toy=<name>&props=<url-encoded json>&mode=mission|studio
+import { store } from '../js/core/store.js';
+const q = new URLSearchParams(location.search);
+const name = q.get('toy') || 'pads';
+const props = JSON.parse(q.get('props') || '{}');
+const mode = q.get('mode') || 'mission';
+document.getElementById('name').textContent = name + ' ' + JSON.stringify(props);
+const logEl = document.getElementById('log');
+const log = (...a) => { console.log('HARNESS', ...a); logEl.textContent += a.join(' ') + '\n'; logEl.scrollTop = 1e9; };
+if (!store.state.crew) store.set({ crew: { commander: 'Finn', copilot: 'Rosie', engineer: 'Dad' } });
+const api = {
+  mode,
+  crew: { commander: 'Finn', copilot: 'Rosie', engineer: 'Dad' },
+  done: m => { document.getElementById('state').textContent = 'DONE'; log('done', m ?? ''); },
+  say: t => log('say:', t),
+  sayNow: t => log('sayNow:', t),
+  log: t => log('log:', t),
+  toast: t => log('toast:', t),
+  setWho: (r, l) => log('who:', r, l || ''),
+  kit: { get: k => store.kit(k), set: (k, v) => { store.setKit(k, v); log('kit.set', k, JSON.stringify(v).slice(0, 120)); } },
+};
+window.addEventListener('error', e => log('ERROR', e.message));
+const mod = await import(`../js/toys/${name}.js`);
+window.toy = mod.mount(document.querySelector('.toybody'), { ...props, studio: mode === 'studio' }, api);
+log('mounted', name);
+</script>
+</body>
+</html>

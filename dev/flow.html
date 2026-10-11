@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><title>Flow test</title>
+<style>body{margin:0;font:14px monospace} iframe{width:1280px;height:800px;border:0;display:block} #out{position:fixed;right:0;top:0;width:420px;height:100%;overflow:auto;background:#111;color:#0f0;padding:8px;white-space:pre-wrap}</style></head>
+<body><iframe id="f" src="../index.html?devcrew&nosw#/"></iframe><div id="out"></div>
+<script>
+// Drives real interactions in the app and checks the results. Prints FLOW lines.
+const out = document.getElementById('out');
+const log = (...a) => { const t = a.join(' '); console.log('FLOW ' + t); out.textContent += t + '\n'; };
+const f = document.getElementById('f');
+const wait = ms => new Promise(r => setTimeout(r, ms));
+let w, d, errors = [], started = false;
+const $ = s => d.querySelector(s);
+const $$ = s => [...d.querySelectorAll(s)];
+function ptr(el, type, x, y, id = 1) {
+  const r = el.getBoundingClientRect();
+  const cx = x ?? r.left + r.width / 2, cy = y ?? r.top + r.height / 2;
+  el.dispatchEvent(new w.PointerEvent(type, { bubbles: true, cancelable: true, pointerId: id, clientX: cx, clientY: cy, button: 0, isPrimary: true, pointerType: 'touch' }));
+}
+const tap = async el => { if (!el) return; ptr(el, 'pointerdown'); ptr(el, 'pointerup'); el.click(); await wait(150); };
+const check = (name, ok, extra = '') => log(`${ok ? 'PASS' : 'FAIL'} ${name} ${extra}`);
+const state = () => JSON.parse(w.localStorage.getItem('astrableeps.v1') || '{}');
+async function go(hash, ms = 700) { w.location.hash = hash; await wait(ms); }
+
+f.addEventListener('load', async () => {
+  if (started) return;
+  started = true;
+  w = f.contentWindow; d = w.document;
+  w.localStorage.setItem('astrableeps.v1', JSON.stringify({ crew: { commander: 'Finn', copilot: 'Rosie', engineer: 'Dad' } }));
+  f.src = '../index.html?nosw&flow=1#/';
+  await new Promise(r => f.addEventListener('load', r, { once: true }));
+  await wait(1200);
+  w = f.contentWindow; d = w.document;
+  w.addEventListener('error', e => errors.push(e.message));
+  w.addEventListener('unhandledrejection', e => errors.push('reject ' + (e.reason && e.reason.message)));
+
+  // 1. Guess: Commander, Co-pilot, Engineer, reveal.
+  await go('#/m/m1/6');
+  const ch = $$('.choice');
+  await tap(ch[2]); await tap(ch[1]); await tap(ch[2]);
+  const rb = $$('.turnrow .btn').find(b => /find out/i.test(b.textContent));
+  check('guess: reveal button after three picks', !!rb);
+  await tap(rb);
+  check('guess: answer highlighted', !!$('.choice.answer'));
+  check('guess: reveal text', /Buzz/.test($('.revealslot')?.textContent || ''));
+  check('guess: Next glows', $('.bottombar .next').classList.contains('glow'));
+
+  // 2. Big Question with a changed mind and a stored choice.
+  await go('#/m/m4/6');
+  let opts = $$('.choice');
+  await tap(opts[0]); await tap(opts[1]); await tap(opts[2]);
+  const whyBtn = $$('.turnrow .btn').find(b => /game makers/i.test(b.textContent));
+  check('question: why step', !!whyBtn);
+  const inp = $('.whyin'); if (inp) inp.value = 'Fast is fun';
+  await tap(whyBtn);
+  check('question: reveal', /Space Invaders/.test($('.revealslot')?.textContent || ''));
+  check('question: choice stored (commander picked fast)', state().choices?.speed === 'fast', JSON.stringify(state().choices));
+  const cm = $$('.mindrow .btn').find(b => /Finn: I changed/.test(b.textContent));
+  await tap(cm);
+  opts = $$('.choice');
+  await tap(opts[2]);
+  check('question: star for changed mind', state().stars === 1, 'stars=' + state().stars);
+  check('question: final choice follows Commander', state().choices?.speed === 'faster', JSON.stringify(state().choices));
+
+  // 3. Make: bonk.
+  await go('#/m/m1/9', 1200);
+  const cards = $$('.bk-card');
+  await tap(cards[1]);
+  await tap($$('.bk-foot .btn')[0]);
+  check('bonk: saved to kit', state().kit?.bump?.voice === 'hoot', JSON.stringify(state().kit?.bump));
+
+  // 4. Song Maker (Tiny, win tune): paint with a drag, save.
+  await go('#/m/m5/6', 1500);
+  const cells = $$('.t-song .cell.m');
+  check('songmaker: tiny grid has 40 note boxes', cells.length === 40, 'n=' + cells.length);
+  let row = cells.filter(c => c.dataset.r === '2');
+  const r0 = row[0].getBoundingClientRect(), r7 = row[7].getBoundingClientRect();
+  ptr(row[0], 'pointerdown');
+  for (let i = 1; i <= 4; i++) ptr($('.t-song .sm-grid'), 'pointermove', r0.left + (r7.left - r0.left) * i / 4 + 10, r0.top + r0.height / 2);
+  ptr($('.t-song .sm-grid'), 'pointerup', r7.left + 10, r0.top + r0.height / 2);
+  await wait(200);
+  const on = $$('.t-song .cell.m.on').length;
+  check('songmaker: drag painted the whole row', on === 8, 'on=' + on);
+  await tap($('.t-song [data-a=play]'));
+  const ac0 = w.__chipTime ? w.__chipTime() : -1;
+  await wait(1500);
+  check('songmaker: playhead moves', $$('.t-song .cell.now').length > 0, 'audio clock ' + ac0 + ' -> ' + (w.__chipTime ? w.__chipTime() : -1));
+  await tap($('.t-song [data-a=play]'));
+  await tap($('.t-song [data-a=undo]'));
+  check('songmaker: undo removes the stroke', $$('.t-song .cell.m.on').length === 0);
+  row = $$('.t-song .cell.m').filter(c => c.dataset.r === '2');
+  ptr(row[0], 'pointerdown'); ptr(row[0], 'pointerup'); await wait(100);
+  row = $$('.t-song .cell.m').filter(c => c.dataset.r === '2');
+  ptr(row[3], 'pointerdown'); ptr(row[3], 'pointerup'); await wait(100);
+  await tap($('.t-song [data-a=save]'));
+  check('songmaker: win tune saved', (state().kit?.win?.notes || []).length === 2, JSON.stringify(state().kit?.win?.notes));
+
+  // 5. Song Maker (Big, music slot, from the kit) with long notes and the rule change.
+  await go('#/m/m8/3', 1500);
+  check('songmaker big: chords loaded', $$('.t-song .cell.ch.on').length === 4);
+  await tap($('.t-song [data-a=long]'));
+  const big = $$('.t-song .cell.m').filter(c => c.dataset.r === '4');
+  const b0 = big[0].getBoundingClientRect(), b3 = big[3].getBoundingClientRect();
+  ptr(big[0], 'pointerdown');
+  ptr($('.t-song .sm-grid'), 'pointermove', b3.left + 10, b0.top + b0.height / 2);
+  ptr($('.t-song .sm-grid'), 'pointerup', b3.left + 10, b0.top + b0.height / 2);
+  await wait(150);
+  check('songmaker big: long note drawn', $$('.t-song .cell.m.on').length === 4 && $$('.t-song .cell.m.held').length === 3, `on=${$$('.t-song .cell.m.on').length} held=${$$('.t-song .cell.m.held').length}`);
+  await tap($('.t-song [data-a=long]'));
+  for (let i = 0; i < 8; i++) {
+    const c = $$('.t-song .cell.m').find(x => x.dataset.r === String(i % 8) && +x.dataset.s === 6 + i);
+    if (c) { ptr(c, 'pointerdown'); ptr(c, 'pointerup'); await wait(60); }
+  }
+  await tap($('.t-song [data-a=play]'));
+  await wait(4000);
+  const news = $$('.modal-head h2').find(x => /rule has changed/i.test(x.textContent));
+  check('songmaker big: rule change appears', !!news);
+  await tap(d.querySelector('.sm-news [data-a=part]'));
+  const dr = state().mod?.songmaker?.['draft-music'];
+  check('songmaker big: faster page added', dr?.pages === 2 && !!dr?.pageSpeed?.[1], JSON.stringify(dr?.pageSpeed));
+  await tap($('.t-song [data-a=tracker]'));
+  check('songmaker big: tracker rows', $$('.t-song .tk-row').length === 32, 'rows=' + $$('.t-song .tk-row').length);
+  await tap($('.t-song [data-a=tracker]'));
+  await tap($('.t-song [data-a=save]'));
+  await tap($$('.modal [data-a=ok]')[0]);
+  check('songmaker big: saved and set as Moon Run music', !!state().kit?.music?.id && state().songs?.length === 1, JSON.stringify(state().kit?.music));
+
+  // 6. Finish: patch earned.
+  await go('#/m/m1/11', 900);
+  check('finish: mission marked done', !!state().done?.m1);
+
+  // 7. Jukebox shows the saved song and the win tune.
+  await go('#/studio/jukebox', 900);
+  check('jukebox: crew songs listed', $$('.jk-grid[data-g=crew] .jk-item').length >= 2, 'n=' + $$('.jk-grid[data-g=crew] .jk-item').length);
+
+  log(`DONE errors=${errors.length}`);
+  errors.forEach(e => log('ERROR ' + e));
+});
+</script></body></html>

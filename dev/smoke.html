@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><title>Smoke test</title>
+<style>body{margin:0;font:14px monospace} iframe{width:1280px;height:800px;border:0;display:block} #out{position:fixed;right:0;top:0;width:420px;height:100%;overflow:auto;background:#111;color:#0f0;padding:8px;white-space:pre-wrap}</style></head>
+<body><iframe id="f" src="../index.html?devcrew&nosw#/"></iframe><div id="out"></div>
+<script>
+// Walks every step of every mission (and the studio screens) in an iframe and reports errors.
+// Usage: dev/smoke.html?ms=900&only=m1,m2
+const q = new URLSearchParams(location.search);
+const MS = +(q.get('ms') || 900);
+const only = (q.get('only') || '').split(',').filter(Boolean);
+const out = document.getElementById('out');
+const log = (...a) => { const t = a.join(' '); console.log('SMOKE ' + t); out.textContent += t + '\n'; };
+const f = document.getElementById('f');
+const errors = [];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+f.addEventListener('load', async () => {
+  const w = f.contentWindow;
+  w.addEventListener('error', e => errors.push(`${w.location.hash} ERROR ${e.message}`));
+  w.addEventListener('unhandledrejection', e => errors.push(`${w.location.hash} REJECT ${e.reason && (e.reason.message || e.reason)}`));
+  const ce = w.console.error.bind(w.console);
+  w.console.error = (...a) => { errors.push(`${w.location.hash} console.error ${a.map(x => x && x.message || String(x)).join(' ')}`); ce(...a); };
+  await wait(1200);
+  const idx = await (await fetch('../content/missions.json')).json();
+  for (const m of idx.missions) {
+    if (only.length && !only.includes(m.id)) continue;
+    const mj = await (await fetch(`../content/missions/${m.id}.json`)).json();
+    for (let i = 0; i < mj.steps.length; i++) {
+      const before = errors.length;
+      w.location.hash = `#/m/${m.id}/${i}`;
+      await wait(MS);
+      const st = w.document.querySelector('.step');
+      const txt = st ? st.innerText.replace(/\s+/g, ' ').slice(0, 60) : '(no step)';
+      const bad = /isn't ready yet/.test(st ? st.innerText : '') ? ' NOT-READY' : '';
+      log(`${m.id}/${i} ${mj.steps[i].type}${mj.steps[i].toy ? ':' + mj.steps[i].toy : ''}${bad} ${errors.length > before ? 'ERR' : 'ok'} | ${txt}`);
+    }
+  }
+  if (!only.length) {
+    for (const t of ['song', 'pads', 'lab', 'wave', 'chords', 'jukebox', 'game']) {
+      const before = errors.length;
+      w.location.hash = `#/studio/${t}`;
+      await wait(MS);
+      log(`studio/${t} ${errors.length > before ? 'ERR' : 'ok'}`);
+    }
+    for (const r of ['#/', '#/notes', '#/log', '#/setup']) { w.location.hash = r; await wait(MS); log(`${r} ok`); }
+  }
+  log(`DONE ${errors.length} errors`);
+  errors.forEach(e => log(e));
+});
+</script></body></html>

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio and art test</title><link rel="stylesheet" href="../css/app.css">
+<style>body{overflow:auto} .wrap{padding:20px;display:flex;flex-direction:column;gap:18px} .grid{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end} .grid .bot{width:140px} .stk{width:80px;height:80px} .p{width:150px}</style></head>
+<body><div class="wrap">
+<h2>Bots (tap to hear)</h2><div class="grid" id="bots"></div>
+<h2>Voices, drums, effects</h2><div class="grid" id="btns"></div>
+<h2>Songs</h2><div class="grid" id="songs"></div>
+<h2>Stickers</h2><div class="grid" id="stk"></div>
+<h2>Patches</h2><div class="grid" id="pt"></div>
+<h2>Waves</h2><div class="grid" id="waves"></div>
+</div>
+<script type="module">
+import * as chip from '../js/core/chip.js';
+import { botSVG, sing, lcdWave } from '../js/core/bots.js';
+import { sticker, STICKERS } from '../js/core/stickers.js';
+import { patchSVG } from '../js/core/patch.js';
+import { demoSongs, scheduleStep, stepsOf, stepDur } from '../js/core/song.js';
+import { Sequencer } from '../js/core/seq.js';
+import { h } from '../js/core/dom.js';
+const $ = id => document.getElementById(id);
+for (const b of ['bleep','hoot','buzz','fizz','crew']) { const d = h(`<div class="bot" data-bot="${b}">${botSVG(b)}<div class="name">${b}</div></div>`); d.addEventListener('pointerdown', () => { chip.hello(b); sing(d); }); $('bots').appendChild(d); }
+$('bots').appendChild(h(`<div class="bot">${botSVG('bleep',{sleep:true})}<div class="name">sleep</div></div>`));
+const B = (label, fn) => { const b = h(`<button class="btn small">${label}</button>`); b.addEventListener('pointerdown', fn); $('btns').appendChild(b); };
+for (const v of ['bleep','hoot','buzz','crew']) B(v + ' C4-C5', () => [60,64,67,72].forEach((m,i) => chip.note({ voice: v, midi: m, at: chip.now() + i*0.2, dur: 0.18 })));
+for (const d of [0.125,0.25,0.5]) B('pulse ' + d, () => chip.note({ voice:'bleep', duty:d, midi:67, dur:0.5 }));
+for (const k of ['boom','tap','tss','crash']) B(k, () => chip.drum(k));
+B('fizz short', () => chip.note({ voice:'fizz', short:true, midi:70, dur:0.5 }));
+B('wobble', () => chip.note({ voice:'bleep', midi:72, dur:1, wobble:1.5 }));
+B('echo', () => chip.note({ voice:'bleep', midi:72, dur:0.2, echo:0.7 }));
+B('sparkle', () => chip.note({ voice:'bleep', duty:0.25, midi:72, dur:1, arp:[0,4,7,12] }));
+B('jump', () => chip.sfx({ voice:'bleep', duty:0.25, from:62, to:79, len:0.2 }));
+B('laser', () => chip.sfx({ voice:'bleep', duty:0.125, from:96, to:60, len:0.25 }));
+B('coin', () => chip.sfx({ voice:'bleep', notes:[83,88], len:0.22 }));
+for (const b of Object.keys(chip.BONKS)) B('bonk ' + b, () => chip.sfx(chip.BONKS[b]));
+let seq = null;
+for (const s of demoSongs()) { const b = h(`<button class="btn small">${s.name}</button>`); b.addEventListener('pointerdown', () => { seq && seq.stop(); seq = new Sequencer({ steps: () => stepsOf(s), stepDur: st => stepDur(s, st), schedule: (st, t, d) => scheduleStep(s, st, t, d), loop: false }); seq.start(); }); $('songs').appendChild(b); }
+const st = h(`<button class="btn small">Stop</button>`); st.addEventListener('pointerdown', () => seq && seq.stop()); $('songs').appendChild(st);
+for (const n of STICKERS) $('stk').appendChild(h(`<div class="stk" title="${n}">${sticker(n)}</div>`));
+$('pt').appendChild(h(`<div class="p">${patchSVG({ name:'Bleep Crew', art:'robot', names:'Finn · Rosie · Dad' })}</div>`));
+$('pt').appendChild(h(`<div class="p">${patchSVG({ name:'Chiptune Composers', art:'note', col:'#d4a017', col2:'#fff2b0', gold:true, names:'Finn · Rosie · Dad' })}</div>`));
+for (const v of ['bleep','hoot','buzz','fizz','crew']) $('waves').appendChild(h(`<div style="width:200px">${lcdWave(chip.shape(v), { w: 200, h: 90 })}</div>`));
+console.log('AUDIOTEST ok', demoSongs().length, 'songs');
+</script></body></html>
