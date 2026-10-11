@@ -228,7 +228,7 @@ export function mount(el, props = {}, api) {
       }
       html += `</div>`;
     }
-    html += `</div><div class="sm-block drums" style="flex:${kinds.length * 0.85}">`;
+    html += `</div><div class="sm-block drums" style="flex:${kinds.length * 0.95}">`;
     for (const k of kinds) {
       const di = drumIndex(k);
       const zone = how === 'highlow' ? 'zp' : '';
@@ -736,15 +736,6 @@ const CSS = `
 .sm-news .sm-newsbot { width: 180px; flex: none; }
 .sm-news .btn.big { justify-content: flex-start; white-space: normal; text-align: left; }
 .sm-news .btn.big svg.sticker { width: 52px; height: 52px; }
-.cartridge { position: relative; background: var(--cc); border: 3px solid var(--edge); border-radius: 16px 16px 8px 8px; padding: 26px 18px 18px; box-shadow: var(--pop); }
-.cartridge::before { content: ''; position: absolute; right: -3px; top: -3px; width: 30px; height: 30px; background: var(--card); border-left: 3px solid var(--edge); border-bottom: 3px solid var(--edge); border-bottom-left-radius: 8px; }
-.cartridge .ct-top { position: absolute; top: 8px; left: 18px; display: flex; gap: 5px; }
-.cartridge .ct-top i { width: 22px; height: 6px; border-radius: 3px; background: rgba(0,0,0,.25); }
-.cartridge .ct-label { background: var(--card); border: 3px solid var(--edge); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-.cartridge .ct-art { width: 92px; height: 92px; }
-.cartridge .ct-name { font-weight: 800; font-size: 22px; line-height: 1.1; word-break: break-word; }
-.cartridge .ct-by { font-size: 13px; color: var(--ink-2); }
-.cartridge .ct-foot { height: 14px; margin: 12px 20px 0; border-radius: 4px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 10px, transparent 10px 16px); }
 @media (max-width: 1100px) {
   .t-song .sm-side { width: 176px; }
   .t-song .sm-row { grid-template-columns: 58px repeat(var(--cols), 1fr); gap: 3px; }

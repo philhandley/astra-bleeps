@@ -152,6 +152,7 @@ svg { display: block; }
 .modal-back { position: fixed; inset: 0; background: rgba(27, 27, 36, .45); z-index: 90; display: flex; align-items: center; justify-content: center; padding: 24px; }
 .modal { background: var(--card); border: 3px solid var(--edge); border-radius: 26px; box-shadow: 6px 8px 0 var(--edge); padding: 26px; width: min(720px, 100%); max-height: 92vh; overflow: auto; }
 .modal.wide { width: min(1100px, 100%); }
+.modal { --notch: var(--card); }
 .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 
 /* ---------------- Bots ---------------- */
@@ -175,8 +176,10 @@ svg { display: block; }
 .sticker { width: 100%; height: 100%; }
 
 /* ---------------- Crew setup ---------------- */
-.setup { align-items: center; justify-content: center; padding: 24px; }
-.setup .card { width: min(1080px, 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 28px 36px; }
+.setup { padding: 20px; }
+.setup .card { margin: auto; width: min(1080px, 100%); display: grid; grid-template-columns: 1fr 1fr; gap: 22px 36px; }
+.setup h1 { font-size: clamp(32px, 3.6vw, 46px); }
+.setup .field input { min-height: 58px; }
 .setup .hero { display: flex; gap: 6px; align-items: flex-end; }
 .setup .hero .bot { width: 25%; }
 .field { display: flex; flex-direction: column; gap: 6px; }
@@ -264,6 +267,8 @@ svg { display: block; }
 }
 .bottombar .mid { flex: 1; display: flex; align-items: center; justify-content: center; gap: 12px; min-width: 0; font-size: 20px; color: var(--ink-2); }
 .bottombar .mid .label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bottombar .mid .label.compact { white-space: normal; font-size: 18px; line-height: 1.25; color: var(--ink); font-weight: 600; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.bottombar .mid .speak-btn { width: 52px; height: 52px; }
 
 /* Story */
 .story { flex: 1; display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; min-height: 0; }
@@ -371,6 +376,17 @@ svg { display: block; }
 .notes a { color: var(--a); }
 .logitem { display: flex; gap: 14px; padding: 10px 0; border-bottom: 2px dashed var(--line); font-size: 19px; }
 .logitem time { color: var(--ink-3); white-space: nowrap; font-size: 16px; padding-top: 2px; }
+
+/* ---------------- Song cartridges (Song Maker save box, Jukebox) ---------------- */
+.cartridge { position: relative; background: var(--cc); border: 3px solid var(--edge); border-radius: 16px 16px 8px 8px; padding: 26px 18px 18px; box-shadow: var(--pop); }
+.cartridge::before { content: ''; position: absolute; right: -3px; top: -3px; width: 30px; height: 30px; background: var(--notch, var(--bg)); border-left: 3px solid var(--edge); border-bottom: 3px solid var(--edge); border-bottom-left-radius: 8px; }
+.cartridge .ct-top { position: absolute; top: 8px; left: 18px; display: flex; gap: 5px; }
+.cartridge .ct-top i { width: 22px; height: 6px; border-radius: 3px; background: rgba(0,0,0,.25); }
+.cartridge .ct-label { background: var(--card); border: 3px solid var(--edge); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.cartridge .ct-art { width: 92px; height: 92px; }
+.cartridge .ct-name { font-weight: 800; font-size: 22px; line-height: 1.1; word-break: break-word; }
+.cartridge .ct-by { font-size: 13px; color: var(--ink-2); }
+.cartridge .ct-foot { height: 14px; margin: 12px 20px 0; border-radius: 4px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 10px, transparent 10px 16px); }
 
 /* ---------------- Studio shell ---------------- */
 .studio { flex: 1; min-height: 0; display: flex; flex-direction: column; }

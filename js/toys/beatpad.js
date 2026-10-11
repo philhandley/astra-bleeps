@@ -211,7 +211,7 @@ const CSS = `
 .t-beatpad .bp-pad.hit { animation: bp-hit .26s ease-out; filter: brightness(1.25) saturate(1.1); }
 .t-beatpad .bp-pad.hit .bp-skin { background: #ddd0ff; }
 @keyframes bp-hit { 0% { transform: scale(.92, .86); } 55% { transform: scale(1.03, 1.02); } 100% { transform: none; } }
-.t-beatpad .bp-spark { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px; z-index: 3; pointer-events: none; border: 2px solid var(--edge); animation: bp-spark .65s ease-out forwards; }
+.t-beatpad .bp-spark { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px; z-index: 3; pointer-events: none; border: 2px solid var(--edge); animation: bp-spark .65s ease-out forwards; }
 @keyframes bp-spark { from { transform: translate(var(--x0), var(--y0)) scale(1.1); opacity: 1; } to { transform: translate(var(--x1), var(--y1)) scale(.4) rotate(90deg); opacity: 0; } }
 
 .t-beatpad .bp-play { width: 100%; min-height: clamp(96px, 22cqh, 130px); border-radius: 26px; font-size: clamp(28px, 6cqh, 36px); box-shadow: 0 7px 0 var(--edge); }

@@ -488,14 +488,21 @@ const EYEBROW = { toy: 'Play', move: 'Move your body!', make: 'Make it', game: '
 function renderToy(el, s, ctx) {
   el.className = 'step';
   const intro = fill(s.intro || s.title || '');
-  el.innerHTML = `<div class="toyhost">${intro ? `<div class="toyintro"><span class="sp"></span><div><div class="eyebrow" style="margin:0 0 4px">${esc(s.eyebrow || EYEBROW[s.type] || 'Play')}</div><div class="t">${esc(intro)}</div></div></div>` : ''}<div class="toybody"></div></div>`;
+  // Compact steps (the big Song Maker) put their instructions in the bottom bar to give the toy more room.
+  const compact = !!s.compact && !!intro;
+  el.innerHTML = `<div class="toyhost">${intro && !compact ? `<div class="toyintro"><span class="sp"></span><div><div class="eyebrow" style="margin:0 0 4px">${esc(s.eyebrow || EYEBROW[s.type] || 'Play')}</div><div class="t">${esc(intro)}</div></div></div>` : ''}<div class="toybody"></div></div>`;
+  if (compact) {
+    R.mid.innerHTML = '';
+    R.mid.appendChild(h(`<span class="sp"></span>`));
+    R.mid.appendChild(h(`<span class="label compact">${esc(intro)}</span>`));
+  }
   const body = el.querySelector('.toybody');
   // While the step's own intro is being read, a toy's opening line would cut it off: skip those.
   let introTalking = false;
   let pending = null;
   if (intro) {
     const b = speakButton(() => intro);
-    el.querySelector('.sp').replaceWith(b);
+    (compact ? R.mid : el).querySelector('.sp').replaceWith(b);
     introTalking = !!store.state.autoRead;
     autoSay(intro, b).then(() => {
       introTalking = false;
@@ -516,7 +523,7 @@ function renderToy(el, s, ctx) {
     },
     log: t => store.addLog(R.mission.id, t),
     say: t => { if (!ctx.live()) return; if (introTalking) pending = t; else autoSay(t); },
-    setWho: (r, label) => ctx.live() && setMid(r, label || ''),
+    setWho: (r, label) => ctx.live() && !compact && setMid(r, label || ''),
   });
   import(`../toys/${name}.js`).then(mod => {
     if (!ctx.live()) return;

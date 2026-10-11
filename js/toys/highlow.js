@@ -230,7 +230,7 @@ const CSS = `
 .t-highlow .hl-ground { background: #cfc4ad; border-top: 4px solid var(--edge); box-shadow: inset 0 6px 0 #b9ad94; }
 .t-highlow .hl-ground span { color: #fff; text-shadow: 3px 3px 0 var(--edge); }
 .t-highlow .hl-zone { flex: 1; min-height: 0; position: relative; display: flex; align-items: flex-end; justify-content: center; }
-.t-highlow .hl-bot { height: 56%; aspect-ratio: 120 / 140; margin-bottom: -2%; transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.34, 1.56, .64, 1); }
+.t-highlow .hl-bot { height: 60%; aspect-ratio: 120 / 140; margin-bottom: -2%; transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.34, 1.56, .64, 1); }
 .t-highlow .hl-bot .botsvg { width: 100%; height: 100%; }
 .t-highlow .hl-stage.high .hl-bot { transform: translateY(-16%) scale(.86, 1.34); }
 .t-highlow .hl-stage.low .hl-bot { transform: scale(1.28, .58); }

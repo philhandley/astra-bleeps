@@ -176,7 +176,7 @@ const CSS = `
 .t-starmaker .sm-rung.press { transform: translateY(3px); box-shadow: 0 1px 0 var(--edge); }
 .t-starmaker .sm-rung.sel { box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--edge), 0 4px 0 7px var(--edge); z-index: 1; }
 .t-starmaker .sm-mark { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(.3); transition: opacity .15s, transform .3s cubic-bezier(.34, 1.56, .64, 1); pointer-events: none; }
-.t-starmaker .sm-mark svg { height: 82%; width: auto; max-width: 70%; }
+.t-starmaker .sm-mark svg { height: 80%; width: auto; max-width: 70%; aspect-ratio: 1; padding: 3px; border-radius: 50%; background: #fff; border: 3px solid var(--edge); }
 .t-starmaker .sm-rung.sel .sm-mark { opacity: 1; transform: none; }
 .t-starmaker .sm-then { align-self: center; width: 40px; height: 40px; color: var(--ink-2); margin-top: 56px; }
 .t-starmaker .sm-then svg { width: 100%; height: 100%; stroke-width: 3; }

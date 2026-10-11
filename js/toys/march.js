@@ -307,15 +307,15 @@ const CSS = `
 .t-march .fz-stage.pb .d0 { transform: translateY(-12%) rotate(9deg); }
 .t-march .fz-stage.pa .d1 { transform: translateY(-16%) scale(.94, 1.08); }
 .t-march .fz-stage.pb .d1 { transform: scale(1.1, .88); }
-.t-march .fz-stage.pa .d2 { transform: translateX(-10%) rotate(-11deg); }
-.t-march .fz-stage.pb .d2 { transform: translateX(10%) rotate(11deg); }
+.t-march .fz-stage.pa .d2 { transform: translateX(-6%) rotate(-10deg); }
+.t-march .fz-stage.pb .d2 { transform: translateX(6%) rotate(10deg); }
 .t-march .fz-stage.pa .d3 { transform: translateY(-4%) rotate(8deg); }
 .t-march .fz-stage.pb .d3 { transform: translateY(-18%) rotate(-12deg); }
 .t-march .fz-stage.frozen .fz-bot { transition: none; }
 .t-march .fz-stage.frozen .fz-bot .botsvg { filter: drop-shadow(3px 0 0 #bfe3ff) drop-shadow(-3px 0 0 #bfe3ff) drop-shadow(0 3px 0 #bfe3ff) drop-shadow(0 -3px 0 #bfe3ff); }
 .t-march .fz-stage.frozen .eyes { animation: none; }
 .t-march .fz-floor { flex: none; height: clamp(22px, 5cqh, 32px); background: repeating-linear-gradient(90deg, #3a3358 0 30px, #332d4f 30px 60px); border-top: 3px solid #120f1f; }
-.t-march .fz-over { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.t-march .fz-over { position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 6%; pointer-events: none; opacity: 0; transition: opacity .15s; }
 .t-march .fz-over span { font-family: var(--pixel); font-size: clamp(34px, min(12cqh, 7cqw), 88px); color: #fff; text-shadow: 5px 5px 0 var(--edge); padding: 22px 34px; border-radius: 22px; transform: scale(.4); transition: transform .35s cubic-bezier(.34, 1.56, .64, 1); }
 .t-march .fz-over.show { opacity: 1; }
 .t-march .fz-over.show span { transform: none; }

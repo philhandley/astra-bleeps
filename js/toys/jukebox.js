@@ -40,7 +40,7 @@ export function mount(el, props = {}, api) {
           ${s.kit ? '' : `<button class="btn small ${music === s.id ? 'on' : ''}" type="button" data-a="game" aria-label="Use in Moon Run">${icon('game')}</button>`}
           ${demoSong || s.kit ? '' : `<button class="btn small" type="button" data-a="del" aria-label="Delete ${esc(s.name)}">${icon('trash')}</button>`}
         </div></div>`;
-    root.querySelector('[data-g=crew]').innerHTML = crew.length ? crew.map(s => card(s, false)).join('') : `<p class="muted lead">Your saved songs appear here. Make one in the <a href="#/studio/song">Song Maker</a>!</p>`;
+    root.querySelector('[data-g=crew]').innerHTML = crew.length ? crew.map(s => card(s, false)).join('') : `<p class="muted lead" style="grid-column:1/-1">Your saved songs appear here. Make one in the <a href="#/studio/song">Song Maker</a>!</p>`;
     root.querySelector('[data-g=demo]').innerHTML = demo.map(s => card(s, true)).join('');
   }
   root.addEventListener('click', async e => {
@@ -114,9 +114,9 @@ const CSS = `
 .t-juke .jk-cart { position: relative; border: 0; background: none; padding: 0; cursor: pointer; text-align: inherit; transition: transform .15s; }
 .t-juke .jk-cart .cartridge { padding: 22px 14px 14px; }
 .t-juke .jk-cart .ct-art { width: 70px; height: 70px; }
-.t-juke .jk-cart .ct-name { font-size: 19px; }
+.t-juke .jk-cart .ct-name { font-size: 19px; min-height: 2.2em; display: flex; align-items: center; justify-content: center; }
 .t-juke .jk-item.playing .jk-cart { transform: translateY(-10px) rotate(-2deg); }
-.t-juke .jk-pl { position: absolute; right: -8px; bottom: 26px; width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--edge); background: var(--go); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--edge); }
+.t-juke .jk-pl { position: absolute; right: -12px; bottom: -12px; width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--edge); background: var(--go); color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--edge); }
 .t-juke .jk-item.playing .jk-pl { background: var(--a); }
 .t-juke .jk-pl svg { width: 28px; height: 28px; }
 .t-juke .jk-game { position: absolute; left: -6px; top: -10px; display: flex; gap: 4px; align-items: center; background: var(--ink); color: #fff; font-size: 13px; font-weight: 700; padding: 4px 8px; border-radius: 8px; }

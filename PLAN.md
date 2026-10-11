@@ -264,8 +264,8 @@ A crib page behind a button: how a session runs, which steps are the Co-pilot's,
 
 ## 10. Testing
 
-- `dev/harness.html?toy=<name>` mounts any toy on its own; `dev/smoke.html` walks every step of every mission and reports errors; `dev/audio-test.html` plays every voice, drum and effect.
-- `tools/shot.sh <name> "<path>"` takes headless Chrome screenshots on port 8100 and prints console lines. `?devcrew` skips crew setup.
+- `dev/harness.html?toy=<name>` mounts any toy on its own; `dev/smoke.html` (run with `bash tools/smoke.sh`) walks every step of every mission and every studio screen and reports errors; `dev/flow.html` (`bash tools/flow.sh`) taps through a guess, a Big Question with a changed mind, the Song Maker in both modes, the rule change and saving, and checks what was stored; `dev/audio-test.html` plays every voice, drum, effect and demo song.
+- `tools/shot.sh <name> "<path>"` takes headless Chrome screenshots on port 8200 and prints console lines. `?devcrew` skips crew setup. Headless Chrome freezes the audio clock, so check playback in a real browser.
 - Real-browser checks in the built-in browser pane at 1280 by 800 and 1024 by 768, with sound.
 - Offline: headless Edge and `dev/test-sw.html` (headless Chrome on this PC fails service-worker cache writes).
 

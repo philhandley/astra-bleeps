@@ -4,7 +4,7 @@
 // props:
 //   slot: 'jump' (or any kit slot)  show "Use this for our game", which saves the recipe to that Moon Run slot.
 //   studio: true (no slot)          show small "Save as Jump / Star / Bump" buttons.
-// Done: in a mission with a slot, when the crew saves. Without a slot, after a few sounds have been made.
+// Done: in a mission with a slot, when the crew saves. Without a slot, after 4 sounds have been played.
 import { sfx, noteLabel, stopAll } from '../core/chip.js';
 import { botSVG, sing } from '../core/bots.js';
 import { BOTS, colourOf } from '../core/song.js';
@@ -330,7 +330,7 @@ export function mount(el, props = {}, api) {
       try { head.animate([{ transform: 'translateX(0px)', opacity: 1 }, { transform: `translateX(${dx}px)`, opacity: 1 }], { duration: Math.max(80, s.len * 1000), easing: 'linear' }); } catch (e) { /* ignore */ }
     }
     plays++;
-    if (!slot && !finished && plays >= 4) { finished = true; api.done(false); }
+    if (!slot && !finished && plays >= 4) { finished = true; api.done(); }
     return len;
   }
   const change = fn => () => { fn(); presetOn = null; render(); play(); };
