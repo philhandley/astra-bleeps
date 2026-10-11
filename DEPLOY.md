@@ -2,28 +2,18 @@
 
 ## Where it lives
 
-Astra Bleeps is published inside the Astra Finn GitHub Pages site, in its own folder, so it has its own address, its own home-screen icon and its own offline copy:
+**https://philhandley.github.io/astra-bleeps/**
 
-**https://philhandley.github.io/astra-finn/bleeps/**
-
-The source of truth is this folder (`C:\1. Astra Bleeps - Chiptunes`, its own git repository). Publishing copies the app files into `C:\1 Astra Nova - Finn\bleeps\` and pushes that repository.
+This folder (`C:. Astra Bleeps - Chiptunes`) is the GitHub repository `philhandley/astra-bleeps`, published by GitHub Pages from `main`. It has its own address outside Astra Finn, so the tablet installs it as its own app. (It briefly lived at `/astra-finn/bleeps/`, which now redirects here.)
 
 ## Updating it after a change
-
-From this folder:
 
 ```bash
 python tools/build_sw.py
 ```
 
 ```bash
-python tools/publish.py "C:/1 Astra Nova - Finn/bleeps"
-```
-
-Then in `C:\1 Astra Nova - Finn`:
-
-```bash
-git add bleeps && git commit -m "Update Astra Bleeps" && git push
+git add -A && git commit -m "Update Astra Bleeps" && git push
 ```
 
 GitHub Pages redeploys in about two minutes.
