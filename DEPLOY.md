@@ -4,7 +4,7 @@
 
 **https://philhandley.github.io/astra-bleeps/**
 
-This folder (`C:. Astra Bleeps - Chiptunes`) is the GitHub repository `philhandley/astra-bleeps`, published by GitHub Pages from `main`. It has its own address outside Astra Finn, so the tablet installs it as its own app. (It briefly lived at `/astra-finn/bleeps/`, which now redirects here.)
+This folder (`C:\1. Astra Bleeps - Chiptunes`) is the GitHub repository `philhandley/astra-bleeps`, published by GitHub Pages from `main`. It has its own address outside Astra Finn, so the tablet installs it as its own app. (It briefly lived at `/astra-finn/bleeps/`, which now redirects here.)
 
 ## Updating it after a change
 
