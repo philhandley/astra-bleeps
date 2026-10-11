@@ -6,7 +6,7 @@ Read `PLAN.md` first (the specification) and `ENGINE.md` (the contract every mod
 Finn (6, the Commander), his three-year-old sibling (the Co-pilot) and their dad (the Sound Engineer), together on a Samsung Galaxy Tab in landscape, 10 to 15 minutes at a time. It teaches chiptune (waveforms, pitch, beat and rhythm, melody, chords, game sound effects, a tracker) the Astra Nova way and lets them make songs and the sounds for a little game, Moon Run.
 
 ## Sister apps
-Astra Finn (`C:\1 Astra Nova - Finn`, the space app and the GitHub Pages repo) and Astra Maths (`C:\1. Astra Nova Synthesis  - Maths Tutor`). This app is its own GitHub repo (`philhandley/astra-bleeps`), live at https://philhandley.github.io/astra-bleeps/. It must not live inside another app's folder: Astra Finn's manifest scope covers all of `/astra-finn/`, so a nested app can't install separately. All three apps share one origin, so each service worker may only delete caches with its own prefix.
+Astra Finn (`C:\1 Astra Nova - Finn`, the space app and the GitHub Pages repo) and Astra Maths (`C:\1. Astra Nova Synthesis  - Maths Tutor`). This app is its own GitHub repo (`philhandley/astra-bleeps`), live at https://philhandley.github.io/astra-bleeps/. It must not live inside another app's folder: Astra Finn's manifest scope covers all of `/astra-finn/`, so a nested app can't install separately. All three apps share one origin, so each service worker may only delete caches with its own prefix, and each manifest needs its own absolute `id` (`/astra-bleeps/`): Chrome resolves `id` against the origin, so `./` would collide with Astra Finn.
 
 ## Hard constraints of this machine
 - No Node.js and no npm. No build step, bundler or framework.
