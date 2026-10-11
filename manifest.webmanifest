@@ -2,7 +2,7 @@
   "name": "Astra Bleeps",
   "short_name": "Astra Bleeps",
   "description": "A chiptune studio for a crew of three.",
-  "id": "./",
+  "id": "/astra-bleeps/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
